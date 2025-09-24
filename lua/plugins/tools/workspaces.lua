@@ -11,9 +11,9 @@ return {
                     open = { -- Actions to perform when a workspace is opened
                         function(workspace)
                               if workspace and workspace.name then
-                                  Utils.sendNotification("Opened workspace: " .. workspace.name, vim.log.levels.INFO)
+                                  notifications.sendNotification("Opened workspace: " .. workspace.name, vim.log.levels.INFO)
                               else
-                                  Utils.sendNotification("Opened workspace, but the name is unavailable", vim.log.levels.INFO)
+                                  notifications.sendNotification("Opened workspace, but the name is unavailable", vim.log.levels.INFO)
                               end
                               require("lsp_python_setup").setup()
                         end
@@ -22,7 +22,7 @@ return {
         close = {
           function(workspace)
             if workspace and workspace.name then
-                Utils.sendNotification("Closed workspace: " .. workspace.name, vim.log.levels.INFO)
+                notifications.sendNotification("Closed workspace: " .. workspace.name, vim.log.levels.INFO)
             else
                 notifications.sendNotification("Closed workspace, but the name is unavailable", vim.log.levels.INFO)
             end
