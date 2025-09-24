@@ -13,6 +13,28 @@ return {
       ft = { "json", "xml", "yaml" },
       mode = "n"
     },
+    {
+      "<leader>`",
+      function()
+        require("telescope.builtin").buffers({
+          ignore_current_buffer = false,
+          show_all_buffers = true,
+          previewer = true,
+          sort_mru = true,
+        })
+      end,
+      desc = "Find Buffers",
+    },
+    { "<leader>\\", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+    { "<leader><F2>", "<cmd>Telescope lsp_references<cr>", desc = "LSP References" },
+    { "<leader><F3>", "<cmd>Telescope lsp_type_definitions<cr>", desc = "LSP Type Definitions" },
+    {
+      "<leader>/",
+      function()
+        require("telescope").extensions.live_grep_args.live_grep_args()
+      end,
+      desc = "Live Grep with Args",
+    },
   },
   opts = {
     defaults = {
@@ -64,28 +86,65 @@ return {
       },
     },
   },
-  requires = {
-    -- Directly require extensions without nesting them inside another config
+  dependencies = {
     "nvim-telescope/telescope-live-grep-args.nvim",
     "nvim-lua/plenary.nvim",
-    "nvim-telescope/telescope-fzf-native.nvim", -- Assuming you have fzf-native installed for the fzf extension
-    "nvim-telescope/telescope-project.nvim",    -- Assuming this is the project extension you meant
-  },
-  dependencies = {
+    { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+    "nvim-telescope/telescope-project.nvim",
     {
-      "nvim-lua/plenary.nvim",
-      "nvim-telescope/telescope-live-grep-args.nvim",
-      "nvim-telescope/telescope-project.nvim",
       "Myzel394/jsonfly.nvim",
       event = "VeryLazy",
       config = function(_, _)
         require("lazyvim.util").on_load("telescope.nvim", function()
           require('telescope').load_extension('fzf')
           require("telescope").load_extension("live_grep_args")
-          require("telescope").load_extension("projects")
+          require("telescope").load_extension("project")
           require("telescope").load_extension("themes")
         end)
       end,
     },
-  }
+  },
+  keys = {
+    {
+      "<leader>fp",
+      function() require("telescope.builtin").find_files({ cwd = require("lazy.core.config").options.root }) end,
+      desc = "Find Plugin File",
+    },
+    {
+      "<leader>j",
+      "<cmd>Telescope jsonfly<cr>",
+      desc = "Open json(fly)",
+      ft = { "json", "xml", "yaml" },
+      mode = "n"
+    },
+    {
+      "<leader>`",
+      function()
+        require("telescope.builtin").buffers({
+          ignore_current_buffer = false,
+          show_all_buffers = true,
+          previewer = true,
+          sort_mru = true,
+        })
+      end,
+      desc = "Find Buffers",
+    },
+    { "<leader>\\", "<cmd>Telescope live_grep<cr>", desc = "Live Grep" },
+    { "<leader><F2>", "<cmd>Telescope lsp_references<cr>", desc = "LSP References" },
+    { "<leader><F3>", "<cmd>Telescope lsp_type_definitions<cr>", desc = "LSP Type Definitions" },
+    {
+      "<leader>/",
+      function()
+        require("telescope").extensions.live_grep_args.live_grep_args()
+      end,
+      desc = "Live Grep with Args",
+    },
+    {
+      "<leader>p",
+      function()
+        require("telescope").extensions.project.project()
+      end,
+      desc = "Projects",
+    },
+  },
 }

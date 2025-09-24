@@ -20,13 +20,6 @@ vim.keymap.set("n", "<leader>`", function()
   })
 end, { noremap = true, silent = true, desc = "Find Buffers" })
 
-vim.api.nvim_set_keymap(
-  "n",
-  "<leader>/",
-  ":Telescope live_grep<CR>",
-  { noremap = true, silent = true }
-)
-
 vim.keymap.set("n", "<leader>tt", ":sp<CR>:terminal<CR>", { noremap = true, silent = true, desc = "Open terminal in horizontal split" })
 vim.keymap.set("n", "<leader>tc", ":terminal<CR>", { noremap = true, silent = true, desc = "Open terminal in current buffer" })
 -- Track the last floating terminal buffer
@@ -161,7 +154,6 @@ vim.api.nvim_set_keymap("n", "<leader><a><c>", "<cmd>CodeCompanionActions<cr>", 
 vim.api.nvim_set_keymap("v", "<leader><a><c>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader><a><a>", "<cmd>CodeCompanionToggle<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<leader><a><a>", "<cmd>CodeCompanionToggle<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("v", "ga", "<cmd>CodeCompanionAdd<cr>", { noremap = true, silent = true })
 
 vim.api.nvim_set_keymap("n", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
@@ -183,7 +175,7 @@ vim.keymap.set("v", "<leader>mp", function()
   end
 
   -- Get the selected range
-  local start_line = vim.fn.line("'<")
+  local start_line = vim.fn.line("'")
   local end_line = vim.fn.line("'>")
 
   -- Iterate through the selected lines
@@ -193,10 +185,9 @@ vim.keymap.set("v", "<leader>mp", function()
   end
 end, { desc = "Prepend text to selected lines" })
 
-
 vim.keymap.set("v", "<leader>md", function()
   -- Prompt the user to enter the number of symbols to delete
-  local count = tonumber(vim.fn.input("Enter number of symbols to delete: "))
+  local count = tonumber(vim.fn.input("Enter number of symbols to delete: ") )
   if not count or count <= 0 then
     vim.notify("Invalid number entered", vim.log.levels.ERROR)
     return
@@ -220,3 +211,99 @@ vim.keymap.set("n", "<leader>pf", function() require("utils.paths").copy_paths('
 vim.keymap.set("n", "<leader>pr", function() require("utils.paths").copy_paths('relative') end, { noremap = true, silent = true, desc = "Copy relative path" })
 vim.keymap.set("n", "<leader>pw", function() require("utils.paths").copy_paths('workflow') end, { noremap = true, silent = true, desc = "Copy workflow path" })
 
+-- mini.files
+vim.g.mini_files_session_root = vim.g.mini_files_session_root or nil
+-- Helper: pick start dir (remember-first, then reuse)
+local function mini_files_start_dir()
+  -- If we already set a session root and it still exists, reuse it
+  if vim.g.mini_files_session_root and vim.fn.isdirectory(vim.g.mini_files_session_root) == 1 then
+    return vim.g.mini_files_session_root
+  end
+  -- Otherwise, initialize from current buffer's directory and remember it
+  local buf_dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
+  if buf_dir == "" then
+    buf_dir = vim.loop.cwd() -- fallback to CWD if buffer has no name
+  end
+  vim.g.mini_files_session_root = buf_dir
+  return buf_dir
+end
+
+vim.keymap.set("n", "<leader>e", function()
+  require("mini.files").open(mini_files_start_dir())
+end, { desc = "Open MiniFiles at session root" })
+
+vim.api.nvim_create_autocmd("User", {
+  pattern = "MiniFilesBufferCreate",
+  callback = function(ev)
+    local buf = ev.data.buf_id
+    local mf = require("mini.files")
+
+    -- Helper: open a path with the system file opener
+    local function system_open(path)
+      if vim.ui.open then
+        vim.ui.open(path)
+      else
+        -- fallback for older Neovim
+        local cmd
+        if vim.fn.has("mac") == 1 then
+          cmd = { "open", path }
+        elseif vim.fn.has("win32") == 1 then
+          cmd = { "cmd.exe", "/c", "start", "", path }
+        else
+          cmd = { "xdg-open", path }
+        end
+        vim.fn.jobstart(cmd, { detach = true })
+      end
+    end
+
+    vim.keymap.set("n", "gs", function()
+      local entry = mf.get_fs_entry()  -- current row (has .path and .type)
+      if not entry then return end
+      system_open(entry.path)
+    end, { buffer = buf, desc = "Open with system" })
+
+    vim.keymap.set("n", "gS", function()
+      local entry = mf.get_fs_entry()
+      if not entry then return end
+      local path = entry.path
+      -- if it's a file, reveal the parent folder; if dir, open the dir itself
+      if entry.fs_type == "file" or entry.type == "file" then
+        path = vim.fn.fnamemodify(path, ":h")
+      end
+      system_open(path)
+    end, { buffer = buf, desc = "Reveal in system file manager" })
+
+    -- Set session root to current entry (dir) or its parent (file)
+    vim.keymap.set("n", "gr", function()
+      local entry = mf.get_fs_entry()
+      if not entry or not entry.path then return end
+      local path = entry.path
+      local is_file = (entry.fs_type == "file") or (entry.type == "file")
+      if is_file then
+        path = vim.fn.fnamemodify(path, ":h")
+      end
+      if vim.fn.isdirectory(path) == 1 then
+        vim.g.mini_files_session_root = path
+        vim.notify("MiniFiles session root → " .. path, vim.log.levels.INFO)
+      end
+    end, { buffer = buf, desc = "Set MiniFiles session root here" })
+  end,
+})
+
+-- mini.splitjoin
+vim.keymap.set("n", "g<leader>S", function() require("mini.splitjoin").split() end, { desc = "Split arguments" })
+vim.keymap.set("n", "gJ", function() require("mini.splitjoin").join() end, { desc = "Join arguments" })
+
+local M = {}
+
+function M.on_attach(client, bufnr)
+    local opts = { noremap = true, silent = true, buffer = bufnr }
+
+    -- Keymaps for LSP
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
+end
+
+return M

@@ -8,16 +8,8 @@ return {
     config = function()
         local lspconfig = require("lspconfig")
 
-        -- Helper function for on_attach
-        local on_attach = function(client, bufnr)
-            local opts = { noremap = true, silent = true, buffer = bufnr }
-
-            -- Keymaps for LSP
-            vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
-            vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-            vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-            vim.keymap.set("n", "gr", vim.lsp.buf.references, opts)
-        end
+        -- Use the centralized on_attach function
+        local on_attach = require("config.keymaps").on_attach
 
         -- Rust LSP
         lspconfig.rust_analyzer.setup({
