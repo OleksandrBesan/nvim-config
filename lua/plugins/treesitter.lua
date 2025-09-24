@@ -1,0 +1,31 @@
+return {
+  "nvim-treesitter/nvim-treesitter",
+  run = ":TSUpdate",
+  opts = {
+      ensure_installed = {
+        "hcl",
+        "terraform",
+      "git_config",
+      "gitignore",
+      "graphql",
+      "helm",
+      "html",
+      "http",
+      "javascript",
+      "python",
+      "rust",
+      "json",
+      "mermaid",
+      "markdown_inline",
+      "pod",
+      "regex",
+      "sql",
+      "tsx",
+      "yaml",
+      "xml",
+      "tsx",
+      "typescript",
+      "go"
+      },
+    },
+}

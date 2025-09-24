@@ -1,0 +1,43 @@
+return {
+  'rmagatti/auto-session',
+  keys = {
+    -- Will use Telescope if installed or a vim.ui.select picker otherwise
+    { '<leader>wwr', '<cmd>SessionSearch<CR>',         desc = 'Session search' },
+    { '<leader>wws', '<cmd>SessionSave<CR>',           desc = 'Save session' },
+    { '<leader>wwa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
+  },
+
+  config = function()
+    vim.o.sessionoptions = 'blank,buffers,curdir,folds,help,tabpages,winsize,winpos,terminal,localoptions'
+    vim.keymap.set('n', '<leader>wwp', require('auto-session.session-lens').search_session)
+    require('auto-session').setup {
+      pre_save_cmds = { 'Neotree close' },
+      post_restore_cmds = { 'Neotree filesystem show' },
+      cwd_change_handling = true,
+      session_lens = {
+        load_on_setup = true, -- Initialize on startup (requires Telescope)
+        theme_conf = {
+
+          border = true, -- Pass through for Telescope theme options
+          -- layout_config = { -- As one example, can change width/height of picker
+          --   width = 0.8,    -- percent of window
+          --   height = 0.5,
+          -- },
+        },
+        previewer = true, -- File preview for session picker
+
+        mappings = {
+          -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
+          delete_session = { "i", "<C-D>" },
+          alternate_session = { "i", "<C-S>" },
+          copy_session = { "i", "<C-Y>" },
+        },
+
+        session_control = {
+          control_dir = vim.fn.stdpath "data" .. "/auto_session/", -- Auto session control dir, for control files, like alternating between two sessions with session-lens
+          control_filename = "session_control.json",               -- File name of the session control file
+        },
+      },
+    }
+  end,
+}
