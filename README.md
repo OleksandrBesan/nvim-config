@@ -109,3 +109,15 @@ Here are some of the custom keymaps I use:
 | `<leader>mp` | Prepend text to selected lines |
 | `<leader>md` | Delete symbols from selected lines |
 | `<leader>me` | Insert text at first and last selected lines |
+
+## Cyrillic Support
+
+This configuration includes Cyrillic (Ukrainian) aliases for common leader mappings so that frequently used commands still work if you forget to switch layouts. Examples:
+- `<leader>у` mirrors `<leader>e` (MiniFiles)
+- `<leader>ее` mirrors `<leader>tt` (terminal split)
+- `<leader>ес` mirrors `<leader>tc` (terminal current buffer)
+- `<leader>еа` mirrors `<leader>tf` (floating terminal)
+- `<leader>ел` mirrors `<leader>tl` (reopen last floating terminal)
+- `<leader>за`, `<leader>зк`, `<leader>зц` mirror `<leader>pf`, `<leader>pr`, `<leader>pw` (copy paths)
+
+Note: Full automatic layout translation (langmap) is not enabled; instead, targeted aliases are used for stability with plugins.

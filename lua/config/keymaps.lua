@@ -232,6 +232,75 @@ vim.keymap.set("n", "<leader>e", function()
   require("mini.files").open(mini_files_start_dir())
 end, { desc = "Open MiniFiles at session root" })
 
+-- Cyrillic alias for <leader>e (UA layout: 'у' sits on US 'e')
+vim.keymap.set("n", "<leader>у", function()
+  require("mini.files").open(mini_files_start_dir())
+end, { desc = "Open MiniFiles at session root (UA alias)" })
+
+-- Cyrillic aliases for common leader mappings (letter-based duplicates)
+-- Terminal helpers
+vim.keymap.set("n", "<leader>ее", ":sp<CR>:terminal<CR>", { noremap = true, silent = true, desc = "Open terminal in horizontal split (UA)" })
+vim.keymap.set("n", "<leader>ес", ":terminal<CR>", { noremap = true, silent = true, desc = "Open terminal in current buffer (UA)" })
+vim.keymap.set("n", "<leader>еа", function()
+  open_floating_terminal(nil)
+end, { noremap = true, silent = true, desc = "Open floating terminal (UA)" })
+vim.keymap.set("n", "<leader>ел", function()
+  if last_float_term_buf and vim.api.nvim_buf_is_valid(last_float_term_buf) then
+    open_floating_terminal(last_float_term_buf)
+  else
+    vim.notify("No previous floating terminal", vim.log.levels.WARN)
+  end
+end, { noremap = true, silent = true, desc = "Reopen last floating terminal (UA)" })
+
+-- Paths helpers
+vim.keymap.set("n", "<leader>за", function() require("utils.paths").copy_paths('full') end, { noremap = true, silent = true, desc = "Copy full path (UA)" })
+vim.keymap.set("n", "<leader>зк", function() require("utils.paths").copy_paths('relative') end, { noremap = true, silent = true, desc = "Copy relative path (UA)" })
+vim.keymap.set("n", "<leader>зц", function() require("utils.paths").copy_paths('workflow') end, { noremap = true, silent = true, desc = "Copy workflow path (UA)" })
+
+-- CodeCompanion
+vim.keymap.set("n", "<leader>фш", "<cmd>CodeCompanionToggle<cr>", { noremap = true, silent = true, desc = "AI: Toggle (UA)" })
+
+-- Buffers and window splits
+-- New empty buffer
+vim.keymap.set("n", "<leader>fb", ":enew<CR>", { noremap = true, silent = true, desc = "New empty buffer" })
+vim.keymap.set("n", "<leader>аи", ":enew<CR>", { noremap = true, silent = true, desc = "New empty buffer (UA)" })
+-- Splits: horizontal and vertical
+vim.keymap.set("n", "<leader>ws", ":split<CR>", { noremap = true, silent = true, desc = "Horizontal split" })
+vim.keymap.set("n", "<leader>wv", ":vsplit<CR>", { noremap = true, silent = true, desc = "Vertical split" })
+vim.keymap.set("n", "<leader>ці", ":split<CR>", { noremap = true, silent = true, desc = "Horizontal split (UA)" })
+vim.keymap.set("n", "<leader>цм", ":vsplit<CR>", { noremap = true, silent = true, desc = "Vertical split (UA)" })
+
+-- Close window
+vim.keymap.set("n", "<leader>wd", ":close<CR>", { noremap = true, silent = true, desc = "Close window" })
+vim.keymap.set("n", "<leader>цв", ":close<CR>", { noremap = true, silent = true, desc = "Close window (UA)" })
+
+-- Core Cyrillic single-key aliases (UA layout)
+-- Paste: 'з' -> 'p', 'З' -> 'P'
+vim.keymap.set({ "n", "x" }, "з", "p", { noremap = true, silent = true, desc = "Paste (UA 'з')" })
+vim.keymap.set({ "n", "x" }, "З", "P", { noremap = true, silent = true, desc = "Paste before (UA 'З')" })
+-- Yank: 'н' -> 'y' (so 'нн' acts like 'yy')
+vim.keymap.set({ "n", "x", "o" }, "н", "y", { noremap = true, silent = true, desc = "Yank (UA 'н')" })
+-- Delete: 'в' -> 'd', 'В' -> 'D'
+vim.keymap.set({ "n", "x", "o" }, "в", "d", { noremap = true, silent = true, desc = "Delete (UA 'в')" })
+vim.keymap.set({ "n", "x", "o" }, "В", "D", { noremap = true, silent = true, desc = "Delete line (UA 'В')" })
+-- WORD motion for delete/change/yank: 'Ц' -> 'W' (so dЦ == dW)
+vim.keymap.set({ "n", "x", "o" }, "Ц", "W", { noremap = true, silent = true, desc = "WORD motion (UA 'Ц')" })
+
+-- Visual-mode navigation aliases
+-- b (back word) via 'и'
+vim.keymap.set('x', 'и', 'b', { noremap = true, silent = true, desc = "Visual: back word (UA 'и')" })
+-- $ (end of line) via ';' and UA letter on that key 'ж'
+vim.keymap.set('x', ';', '$', { noremap = true, silent = true, desc = "Visual: end of line via ';'" })
+vim.keymap.set('x', 'ж', '$', { noremap = true, silent = true, desc = "Visual: end of line (UA 'ж')" })
+
+-- Mode switching via Cyrillic letters
+-- Insert: 'ш' -> 'i', 'Ш' -> 'I'
+vim.keymap.set('n', 'ш', 'i', { noremap = true, silent = true, desc = "Enter Insert (UA 'ш')" })
+vim.keymap.set('n', 'Ш', 'I', { noremap = true, silent = true, desc = "Insert at line start (UA 'Ш')" })
+-- Visual: 'м' -> 'v', 'М' -> 'V'
+vim.keymap.set('n', 'м', 'v', { noremap = true, silent = true, desc = "Enter Visual (UA 'м')" })
+vim.keymap.set('n', 'М', 'V', { noremap = true, silent = true, desc = "Enter Visual Line (UA 'М')" })
+
 vim.api.nvim_create_autocmd("User", {
   pattern = "MiniFilesBufferCreate",
   callback = function(ev)
