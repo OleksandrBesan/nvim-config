@@ -1,4 +1,4 @@
-local Utils = require('utils')
+local notifications = require('utils.notifications')
 
 
 return {
@@ -24,7 +24,7 @@ return {
             if workspace and workspace.name then
                 Utils.sendNotification("Closed workspace: " .. workspace.name, vim.log.levels.INFO)
             else
-                Utils.sendNotification("Closed workspace, but the name is unavailable", vim.log.levels.INFO)
+                notifications.sendNotification("Closed workspace, but the name is unavailable", vim.log.levels.INFO)
             end
           end
     }

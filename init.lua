@@ -110,12 +110,13 @@ vim.api.nvim_command("set conceallevel=0")
 
 
 
-local Utils = require("utils")
+local env = require("utils.env")
+local notifications = require("utils.notifications")
 
-local env_vars = Utils.load_env_file({ debug = false }) or {}
+local env_vars = env.load_env_file({ debug = false }) or {}
 vim.api.nvim_create_autocmd("DirChanged", {
   callback = function()
-    env_vars = Utils.load_env_file() or env_vars
+    env_vars = env.load_env_file() or env_vars
   end,
 })
 
@@ -123,15 +124,15 @@ local api_key_openai    = env_vars.OPENAI_API_KEY    or vim.env.OPENAI_API_KEY
 local api_key_anthropic = env_vars.ANTHROPIC_API_KEY or vim.env.ANTHROPIC_API_KEY
 
 if api_key_openai then
-  Utils.sendNotification("OPENAI_API_KEY loaded", vim.log.levels.INFO)
+  notifications.sendNotification("OPENAI_API_KEY loaded", vim.log.levels.INFO)
 else
-  Utils.sendNotification("OPENAI_API_KEY is not set.", vim.log.levels.ERROR)
+  notifications.sendNotification("OPENAI_API_KEY is not set.", vim.log.levels.ERROR)
 end
 
 if api_key_anthropic then
-  Utils.sendNotification("ANTHROPIC_API_KEY loaded", vim.log.levels.INFO)
+  notifications.sendNotification("ANTHROPIC_API_KEY loaded", vim.log.levels.INFO)
 else
-  Utils.sendNotification("ANTHROPIC_API_KEY is not set.", vim.log.levels.ERROR)
+  notifications.sendNotification("ANTHROPIC_API_KEY is not set.", vim.log.levels.ERROR)
 end
 require("codecompanion").setup({
   prompt_library = {

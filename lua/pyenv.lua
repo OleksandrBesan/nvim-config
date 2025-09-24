@@ -1,4 +1,4 @@
-local Utils = require('utils')
+local notifications = require('utils.notifications')
 
 local PyenvHelper = {}
 function PyenvHelper.get_pyenv_version()
@@ -11,7 +11,7 @@ function PyenvHelper.get_pyenv_version()
       local result = handle:read("*a")
       handle:close()
       result = result:gsub("%s+$", "")
-      Utils.sendNotification(result, vim.log.levels.INFO)
+      notifications.sendNotification(result, vim.log.levels.INFO)
       if result ~= "" then
         local home_dir = os.getenv("HOME")
         local pyenv_python = home_dir .. "/.pyenv/versions/" .. result .. "/bin/python"

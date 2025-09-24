@@ -1,32 +1,6 @@
-local Utils = {}
+local M = {}
 
-function Utils.sendNotification(msg, log_level)
-  vim.notify(msg, log_level, {
-    title = "Notification",
-    timeout = 5000,
-    icon = "info",
-  })
-end
-
-function Utils.copy_paths(type)
-  local file_path = vim.fn.expand('%:p')
-  local relative_path = vim.fn.expand('%:.')
-  local workflow_path = vim.fn.getcwd()
-
-  if type == 'full' then
-    vim.fn.setreg('+', file_path)
-    Utils.sendNotification('Copied full path: ' .. file_path, vim.log.levels.INFO)
-  elseif type == 'relative' then
-    vim.fn.setreg('+', relative_path)
-    Utils.sendNotification('Copied relative path: ' .. relative_path, vim.log.levels.INFO)
-  elseif type == 'workflow' then
-    vim.fn.setreg('+', workflow_path)
-    Utils.sendNotification('Copied workflow path: ' .. workflow_path, vim.log.levels.INFO)
-  end
-end
-
-
--- utils/env.lua (or straight in init.lua)
+local notifications = require("utils.notifications")
 
 local uv = vim.uv or vim.loop
 
@@ -69,7 +43,7 @@ local function candidate_paths()
   local root = (function()
     local ok, out = pcall(function()
       local r = vim.system({ "git", "rev-parse", "--show-toplevel" }, { text = true }):wait()
-      return (r and r.code == 0) and (r.stdout:gsub("%s+$","")) or nil
+      return (r and r.code == 0) and (r.stdout:gsub("%%s+$", "")) or nil
     end)
     return ok and out or nil
   end)()
@@ -90,7 +64,7 @@ local function parse_line(line)
   -- strip comments (allow inline # only if quoted)
   if line:match("^%s*#") then return nil end
   -- handle BOM
-  line = line:gsub("^\239\187\191", "")
+  line = line:gsub("^\\239\\187\\191", "")
   local eq = line:find("=")
   if not eq then return nil end
 
@@ -98,20 +72,20 @@ local function parse_line(line)
   local val = trim(line:sub(eq + 1))
 
   -- support 'export FOO=bar'
-  key = key:gsub("^export%s+", "")
+  key = key:gsub("^export%%s+", "")
 
   if key == "" then return nil end
   -- keep inline comments only if value is quoted
   if not (val:sub(1,1) == '"' or val:sub(1,1) == "'") then
     -- remove trailing comment
-    local hash = val:find("%s#")
+    local hash = val:find("%%s#")
     if hash then val = trim(val:sub(1, hash - 1)) end
   end
   val = unquote(val)
   return key, val
 end
 
-function Utils.load_env_file(opts)
+function M.load_env_file(opts)
   opts = opts or {}
   local vars = {}
   local loaded_from
@@ -138,13 +112,13 @@ function Utils.load_env_file(opts)
 
   if opts.debug then
     if loaded_from then
-      Utils.sendNotification(("ENV loaded from: %s (%d keys)"):format(loaded_from, vim.tbl_count(vars)), vim.log.levels.INFO)
+      notifications.sendNotification(("ENV loaded from: %s (%%d keys)"):format(loaded_from, vim.tbl_count(vars)), vim.log.levels.INFO)
     else
-      Utils.sendNotification("ENV: no keys found in any candidate .env", vim.log.levels.WARN)
+      notifications.sendNotification("ENV: no keys found in any candidate .env", vim.log.levels.WARN)
     end
   end
 
   return vars
 end
 
-return Utils
+return M

@@ -216,7 +216,7 @@ vim.keymap.set("v", "<leader>me", function()
   vim.cmd("'<,'>InsertAtEdges " .. text)
 end, { desc = "Insert text at first and last selected lines" })
 
-vim.keymap.set("n", "<leader>pf", function() require("utils").copy_paths('full') end, { noremap = true, silent = true, desc = "Copy full path" })
-vim.keymap.set("n", "<leader>pr", function() require("utils").copy_paths('relative') end, { noremap = true, silent = true, desc = "Copy relative path" })
-vim.keymap.set("n", "<leader>pw", function() require("utils").copy_paths('workflow') end, { noremap = true, silent = true, desc = "Copy workflow path" })
+vim.keymap.set("n", "<leader>pf", function() require("utils.paths").copy_paths('full') end, { noremap = true, silent = true, desc = "Copy full path" })
+vim.keymap.set("n", "<leader>pr", function() require("utils.paths").copy_paths('relative') end, { noremap = true, silent = true, desc = "Copy relative path" })
+vim.keymap.set("n", "<leader>pw", function() require("utils.paths").copy_paths('workflow') end, { noremap = true, silent = true, desc = "Copy workflow path" })
 

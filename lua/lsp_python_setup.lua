@@ -1,5 +1,5 @@
 local PyenvHelper = require('pyenv')
-local Utils = require('utils')
+local notifications = require('utils.notifications')
 local lspconfig = require("lspconfig")
 local M = {}
 
@@ -12,7 +12,7 @@ function M.setup()
         Utils.sendNotification("Failed to retrieve Pyenv version", vim.log.levels.ERROR)
         return
     else
-      Utils.sendNotification(pyenv_python, vim.log.levels.INFO)
+      notifications.sendNotification(pyenv_python, vim.log.levels.INFO)
     end
     -- ALE 
   --
