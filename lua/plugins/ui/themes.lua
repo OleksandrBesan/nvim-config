@@ -14,6 +14,7 @@ return {
       require("everforest").setup({
         background = "soft",
       })
+      vim.cmd("colorscheme everforest")
     end,
   },
   { 'projekt0n/github-nvim-theme' },

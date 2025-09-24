@@ -90,7 +90,7 @@ vim.api.nvim_set_keymap("n", "<leader>\\", ":Telescope live_grep<CR>", { noremap
 
 -- SQL query text object
 vim.api.nvim_set_keymap("v", "<leader><F5>s", "<esc>:lua SelectToFirstSemicolon()<cr>", { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<leader><F5>s", ":<c-u>lua SelectToFirstSemicolon()<cr>", { noremap = true, silent = true })
+vim.api.nvim_set_keymap("n", "<leader><F5>s", ":<c-u>lua require('commands').SelectToFirstSemicolon()<cr>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<leader><F5>ec", ":lua ExportQueryToCSV()<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader><F5>q", ":DB<CR>", { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<leader><F5><F5>", ":DB<CR>", { noremap = true, silent = true })

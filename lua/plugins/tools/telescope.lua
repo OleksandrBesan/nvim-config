@@ -16,6 +16,16 @@ return {
   },
   opts = {
     defaults = {
+      vimgrep_arguments = {
+        "rg",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case",
+        "--hidden",
+      },
       layout_strategy = "horizontal",
       layout_config = { prompt_position = "top" },
       sorting_strategy = "ascending",

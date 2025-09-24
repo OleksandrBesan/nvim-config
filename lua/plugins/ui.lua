@@ -5,4 +5,5 @@ return {
   require("plugins.ui.gruvbox"),
   require("plugins.ui.mini_indentscope"),
   require("plugins.ui.themes"),
+  require("plugins.ui.noice"),
 }

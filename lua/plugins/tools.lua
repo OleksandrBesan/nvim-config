@@ -9,4 +9,5 @@ return {
   require("plugins.tools.mcphub"),
   require("plugins.tools.marks"),
   require("plugins.tools.nvim-windows-picker"),
+  require("plugins.tools.codecompanion"),
 }

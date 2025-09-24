@@ -8,4 +8,5 @@ return {
   require("plugins.editing.ssr"),
   require("plugins.editing.vim-visual-multi"),
   require("plugins.editing.nvim-recorder"),
+  require("plugins.editing.conform"),
 }
