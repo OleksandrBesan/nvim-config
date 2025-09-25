@@ -9,7 +9,7 @@ function M.setup()
     local flake_config_files = {"setup.cfg", ".flake8", "tox.ini"}
 
     if not pyenv_python then
-        Utils.sendNotification("Failed to retrieve Pyenv version", vim.log.levels.ERROR)
+        notifications.sendNotification("Failed to retrieve Pyenv version", vim.log.levels.ERROR)
         return
     else
       notifications.sendNotification(pyenv_python, vim.log.levels.INFO)
