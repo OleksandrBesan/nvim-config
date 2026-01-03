@@ -1,6 +1,7 @@
 return {
   require("plugins.editing.auto-save"),
   require("plugins.editing.comment"),
+  require("plugins.editing.flash"),
   require("plugins.editing.mini_bracketed"),
   require("plugins.editing.mini_pairs"),
   require("plugins.editing.mini_splitjoin"),
