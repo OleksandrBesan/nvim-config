@@ -1,11 +1,5 @@
 return {
   {
-    "cdmill/neomodern.nvim"
-  },
-  {
-    "sainnhe/gruvbox-material",
-  },
-  {
     "neanias/everforest-nvim",
     version = false,
     lazy = false,
@@ -17,12 +11,4 @@ return {
       vim.cmd("colorscheme everforest")
     end,
   },
-  { 'projekt0n/github-nvim-theme' },
-  { 'nyoom-engineering/oxocarbon.nvim' },
-  {
-    'andrew-george/telescope-themes',
-    config = function()
-      require('telescope').load_extension('themes')
-    end
-  }
 }

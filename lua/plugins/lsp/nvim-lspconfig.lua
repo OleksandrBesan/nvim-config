@@ -1,5 +1,6 @@
 return {
     "neovim/nvim-lspconfig",
+    event = { "BufReadPost", "BufNewFile" },
     dependencies = {
       'jose-elias-alvarez/nvim-lsp-ts-utils' ,  -- Existing requirement
       'kkharji/lspsaga.nvim',

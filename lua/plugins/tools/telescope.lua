@@ -99,7 +99,6 @@ return {
           require('telescope').load_extension('fzf')
           require("telescope").load_extension("live_grep_args")
           require("telescope").load_extension("project")
-          require("telescope").load_extension("themes")
         end)
       end,
     },
@@ -145,6 +144,18 @@ return {
         require("telescope").extensions.project.project()
       end,
       desc = "Projects",
+    },
+    {
+      "<leader>fl",
+      function()
+        require("telescope.builtin").buffers({
+          ignore_current_buffer = false,
+          show_all_buffers = true,
+          previewer = true,
+          sort_mru = true,
+        })
+      end,
+      desc = "List Buffers",
     },
   },
 }
